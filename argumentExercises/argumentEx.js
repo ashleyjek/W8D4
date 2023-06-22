@@ -23,19 +23,19 @@ function sum(args) {
 // console.log(sum2(1, 2, 3, 4, 5));
 
 Function.prototype.myBind = function(ctx) {
-    originalFunc = this;
-    bindArgs = Array.from(arguments).slice(1);
+    const originalFunc = this;
+    let bindArgs = Array.from(arguments).slice(1);
     return function() {
-        callArgs = Array.from(arguments);
-        originalFunc.apply(ctx, bindArgs.concat(callArgs));
+        let callArgs = Array.from(arguments);
+        return originalFunc.apply(ctx, bindArgs.concat(callArgs));
     };
 }
 
 
 Function.prototype.myBind = function(ctx, ...bindArgs) {
-    originalFunc = this;
+    const originalFunc = this;
     return function(...callArgs) {
-        originalFunc.apply(ctx, bindArgs.concat(callArgs));
+        return originalFunc.apply(ctx, bindArgs.concat(callArgs));
     };
 }
 
@@ -131,15 +131,50 @@ function sumThree(num1, num2, num3) {
   }
 
 
+//USING CALL AND SPREAD OPERATOR
 Function.prototype.curry = function(numArgs) {
     debugger
-    originalFunc = this;
+    const originalFunc = this;
     const nums = [];
     return function _curried(num) {
         nums.push(num);
         debugger
         if(nums.length === numArgs) {
             return originalFunc.call(null, ...nums);
+        }
+        else{
+            return _curried;
+        }
+    }
+}
+
+//USING APPLY 
+Function.prototype.curry = function(numArgs) {
+    debugger
+    const originalFunc = this;
+    const nums = [];
+    return function _curried(num) {
+        nums.push(num);
+        debugger
+        if(nums.length === numArgs) {
+            return originalFunc.apply(null, nums);
+        }
+        else{
+            return _curried;
+        }
+    }
+}
+
+//WITH CONTEXT PASSED IN 
+Function.prototype.curry = function(context, numArgs) {
+    debugger
+    const originalFunc = this;
+    const nums = [];
+    return function _curried(num) {
+        nums.push(num);
+        debugger
+        if(nums.length === numArgs) {
+            return originalFunc.call(context, ...nums);
         }
         else{
             return _curried;
